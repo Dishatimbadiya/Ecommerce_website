@@ -1,0 +1,7 @@
+{% include 'helper/header.html' %}
+<h2>Register New Product</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Register Product">
+</form>

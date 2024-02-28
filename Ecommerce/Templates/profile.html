@@ -1,0 +1,10 @@
+{% include 'helper/header.html' %}
+
+{% if user.is_authenticated %}
+<h1>Welcome, {{ user.username }}! Your role is {{ user.userprofile.role }}</h1>
+{% else %}
+<h1>Guest User</h1>
+{% endif %}
+</body>
+
+</html>
