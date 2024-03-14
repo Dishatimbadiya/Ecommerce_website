@@ -76,8 +76,9 @@ TEMPLATES = [
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'Ecommerce/static'),
 ]
+
 
 WSGI_APPLICATION = 'mypro.wsgi.application'
 

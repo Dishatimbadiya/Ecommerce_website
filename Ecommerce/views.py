@@ -15,7 +15,7 @@ def profile(request):
         role = user_profile.role
     except UserProfile.DoesNotExist:
         role = 'buyer'
-    return render(request, 'profile.html', {'role': role})
+    return render(request, 'Accounts/profile.html', {'role': role})
 
 def user_logout(request):
     logout(request)
@@ -25,23 +25,23 @@ def index(request):
     return render(request,'index.html')
 
 def custom_login(request):
-    return render(request,'login.html')
+    return render(request,'Accounts/login.html')
 
 def product(request):
     products = Product.objects.all()
-    return render(request, 'product.html', {'products': products})
+    return render(request, 'Products/product.html', {'products': products})
 
 def cart(request):
     carts=Cart.objects.all()
     context={'Carts':carts}
-    return render(request,'cart.html')
+    return render(request,'Cart/cart.html')
 
 def profile(request):
     # username="disha"
     # context={
     #     'username':username
     # }
-    return render(request,'profile.html')
+    return render(request,'Accounts/profile.html')
 
 def register_product(request):
     if request.method == 'POST':
@@ -53,7 +53,7 @@ def register_product(request):
             return redirect('product')
     else:
         form = ProductForm()
-    return render(request, 'register_product.html', {'form': form})
+    return render(request, 'Products/register_product.html', {'form': form})
 
 
 def user_login(request):
@@ -70,7 +70,7 @@ def user_login(request):
                 return redirect('index')
     else:
         form = LoginForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'Accounts/login.html', {'form': form})
 
 def register(request):
     if request.method == 'POST':
@@ -90,4 +90,4 @@ def register(request):
         user_form = UserCreationForm()
         profile_form = RegistrationForm()
 
-    return render(request, 'register.html', {'user_form': user_form, 'profile_form': profile_form})
+    return render(request, 'Accounts/register.html', {'user_form': user_form, 'profile_form': profile_form})
