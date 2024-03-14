@@ -6,7 +6,7 @@ from .Templates import *
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'price', 'seller', 'image', 'discount', 'quantity', 'category', 'brand', 'rating']
+        fields = ['name', 'description', 'price', 'image', 'discount', 'quantity', 'category', 'brand']
 
 
 class LoginForm(forms.Form):

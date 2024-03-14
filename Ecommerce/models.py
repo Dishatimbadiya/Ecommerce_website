@@ -47,7 +47,6 @@ class Cart(models.Model):
     items = models.ManyToManyField(Product, through='CartItem')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     is_checked_out = models.BooleanField(default=False)
-
     def update_total_price(self):
         self.total_price = sum(item.cart_item_price for item in self.items.all())
         self.save()
