@@ -118,10 +118,8 @@ def register(request):
     if request.method == 'POST':
         user_form = UserCreationForm(request.POST)
         profile_form = RegistrationForm(request.POST)
-        
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
-
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()
