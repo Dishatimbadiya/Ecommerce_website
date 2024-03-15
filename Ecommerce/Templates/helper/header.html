@@ -36,7 +36,7 @@
                         <a class="nav-link" href="{% url 'product' %}">Products</a>
                     </li>
                     {% endif %}
-                    {% if request.session.user_role == 'buyer' %}
+                    {% if request.session.user_role == 'seller' %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'register_product' %}">Register New Product</a>
                     </li>
