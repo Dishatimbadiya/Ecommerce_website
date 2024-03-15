@@ -59,6 +59,7 @@
                     </div>
                     <p class="card-text">{{ product.description }}</p>
                 </div>
+                {% if request.session.user_role == 'buyer' %}
                 <div class="card-body">
                     <form id="buyNowForm" action="{% url 'buy_now' %}" method="post">
                         {% csrf_token %}
@@ -71,6 +72,7 @@
                         <button>Add to cart</button>
                     </form>
                 </div>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
