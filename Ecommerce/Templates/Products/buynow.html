@@ -3,7 +3,42 @@
 <style>
     img {
         height: 225px;
-        width: 225px;
+        width: 70px;
+    }
+
+    .column {
+        float: left;
+        width: 25%;
+        padding: 0 10px;
+    }
+
+    .row {
+        margin: 0 -5px;
+    }
+
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    @media screen and (max-width: 600px) {
+        .column {
+            width: 100%;
+            display: block;
+            margin-bottom: 20px;
+        }
+    }
+
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        text-align: center;
+        margin: 20PX;
+    }
+
+    .card-link {
+        color: tan;
     }
 </style>
 <h2>Buy Now</h2>

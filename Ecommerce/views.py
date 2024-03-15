@@ -50,6 +50,7 @@ def add_to_cart(request):
         user_cart, created = Cart.objects.get_or_create(user=request.user)
         cart_item, created = CartItem.objects.get_or_create(cart=user_cart, product=product)
         cart_item.quantity += 1
+        cart_item.item_price=cart_item.item_price+product.price
         cart_item.save()
     return redirect('cart')
 

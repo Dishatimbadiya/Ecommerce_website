@@ -33,8 +33,11 @@
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
         padding: 20px;
         text-align: center;
-        margin: 20px;
+        margin: 20PX;
+        color: white;
+        background: black;
     }
+
 
     .card-link {
         color: tan;
@@ -44,7 +47,7 @@
 
 <div class="container">
     <div class="row">
-        {{ cart.user }} - {{ cart.total_price }}
+        <h4> Username : </h4> {{ cart.user }} - {{ cart.total_price }}
         {% for cart_item in cart.items.all %}
         <div class="column">
             <div class="card" style="width: 18rem;">
