@@ -61,6 +61,10 @@ def buy_now(request):
     else:
         return HttpResponseNotAllowed(['POST'])
 
+@login_required
+def view_added_product(request):
+    return redirect('view_added_products')
+
 def buy_now_from_cart(request):
     user_cart = Cart.objects.get(user=request.user)
     cart_items = user_cart.items.all()
@@ -95,7 +99,6 @@ def user_login(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 auth_login(request, user)
@@ -123,7 +126,8 @@ def register(request):
             profile.save()
             user_role = profile.role
             request.session['user_role'] = user_role
-            return render(request, 'index.html', {'username': user.username, 'user_role': user_role})
+            form = LoginForm()
+            return render(request, 'Accounts/login.html', {'form': form})
     else:
         user_form = UserCreationForm()
         profile_form = RegistrationForm()
