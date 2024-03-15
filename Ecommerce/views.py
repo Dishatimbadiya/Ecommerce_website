@@ -62,10 +62,14 @@ def buy_now(request):
     else:
         return HttpResponseNotAllowed(['POST'])
 
-@login_required
 def view_added_products(request):
-    return render(request,'Products/view_added_products.html')
-
+    user_id = request.session.get('userid')
+    if user_id is not None:
+        products = Product.objects.filter(seller=user_id)
+        return render(request, 'Products/view_added_products.html', {'products': products})
+    else:
+        return render(request, 'error.html', {'message': 'User ID not found in session.'})
+    
 def buy_now_from_cart(request):
     user_cart = Cart.objects.get(user=request.user)
     cart_items = user_cart.items.all()
@@ -106,6 +110,7 @@ def user_login(request):
                 try:
                     user_profile = UserProfile.objects.get(user=user)
                     request.session['user_role'] = user_profile.role
+                    request.session['userid'] =user.id
                 except UserProfile.DoesNotExist:
                     request.session['user_role'] = 'buyer'
 
@@ -125,6 +130,8 @@ def register(request):
             profile.save()
             user_role = profile.role
             request.session['user_role'] = user_role
+            user_id = user.id
+            request.session['userid'] = user_id            
             form = LoginForm()
             return render(request, 'Accounts/login.html', {'form': form})
     else:
