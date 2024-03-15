@@ -62,8 +62,8 @@ def buy_now(request):
         return HttpResponseNotAllowed(['POST'])
 
 @login_required
-def view_added_product(request):
-    return redirect('view_added_products')
+def view_added_products(request):
+    return render(request,'Products/view_added_products.html')
 
 def buy_now_from_cart(request):
     user_cart = Cart.objects.get(user=request.user)
