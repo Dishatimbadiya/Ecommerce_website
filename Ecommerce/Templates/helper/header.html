@@ -41,9 +41,11 @@
                         <a class="nav-link" href="{% url 'register_product' %}">Register New Product</a>
                     </li>
                     {% endif %}
+                    {% if request.session.user_role == 'buyer' %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'cart' %}">Cart</a>
                     </li>
+                    {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
