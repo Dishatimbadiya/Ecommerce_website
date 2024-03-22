@@ -1,4 +1,5 @@
 from imaplib import _Authenticator
+from pyexpat.errors import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotAllowed
@@ -47,11 +48,32 @@ def add_to_cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         product = get_object_or_404(Product, id=product_id)
+        print(product.name)
         user_cart, created = Cart.objects.get_or_create(user=request.user)
         cart_item, created = CartItem.objects.get_or_create(cart=user_cart, product=product)
         cart_item.quantity += 1
-        cart_item.item_price=cart_item.item_price+product.price
+        cart_item.item_price=(cart_item.item_price+product.price)
         cart_item.save()
+    return redirect('cart')
+
+def remove_from_cart(request, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+    cart_item.delete()
+    return redirect('cart')
+
+def increment_quantity(request, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+    cart_item.quantity += 1
+    cart_item.save()
+    return redirect('cart')
+
+def decrement_quantity(request, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+    if cart_item.quantity > 1:
+        cart_item.quantity -= 1
+        cart_item.save()
+    else:
+        cart_item.delete()
     return redirect('cart')
 
 def buy_now(request):
