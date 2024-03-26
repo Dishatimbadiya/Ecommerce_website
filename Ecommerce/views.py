@@ -1,3 +1,4 @@
+from decimal import Decimal
 from imaplib import _Authenticator
 from pyexpat.errors import messages
 from django.contrib.auth import authenticate, login as auth_login
@@ -8,6 +9,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
 from h11 import PRODUCT_ID
+from django.db import transaction
 from .models import *
 from .forms import *
 
@@ -42,18 +44,33 @@ def cart(request):
         user_cart = Cart.objects.create(user=request.user)
     return render(request, 'Cart/cart.html', {'cart': user_cart})
 
-
 @login_required
 def add_to_cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         product = get_object_or_404(Product, id=product_id)
-        print(product.name)
+        
         user_cart, created = Cart.objects.get_or_create(user=request.user)
         cart_item, created = CartItem.objects.get_or_create(cart=user_cart, product=product)
-        cart_item.quantity += 1
-        cart_item.item_price=(cart_item.item_price+product.price)
-        cart_item.save()
+        
+        if created:
+            cart_item.quantity = 1
+            cart_item.item_price = Decimal(str(product.price))  
+        else:
+            cart_item.quantity += 1 
+            cart_item.item_price += Decimal(str(product.price))
+        
+        # Convert total_price to Decimal if it's not already
+        user_cart.total_price = Decimal(str(user_cart.total_price))
+        
+        user_cart.total_price += Decimal(str(product.price))
+        print(user_cart.total_price)  # Debugging print statement
+        
+        # Save the cart item and the cart
+        with transaction.atomic():
+            cart_item.save()
+            user_cart.save()
+        
     return redirect('cart')
 
 def remove_from_cart(request, cart_item_id):
@@ -95,7 +112,7 @@ def view_added_products(request):
 def buy_now_from_cart(request):
     user_cart = Cart.objects.get(user=request.user)
     cart_items = user_cart.items.all()
-    return render(request, 'Products/buynow.html', {'products': cart_items})
+    return render(request, 'Products/buynow.html', {'products': cart_items, 'user_cart': user_cart})
 
 def profile(request):
     # username="disha"
