@@ -32,6 +32,62 @@ def index(request):
 def custom_login(request):
     return render(request,'Accounts/login.html')
 
+@login_required
+def order(request):
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'Order/order.html', {'orders': orders})
+
+def category_products(request, category_id):
+    category = Category.objects.get(pk=category_id)
+    products = Product.objects.filter(category=category)
+    return render(request, 'Category/view_category_products.html', {'products': products})
+
+@login_required
+def place_order(request, product_id):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        card_number = request.POST.get('card_number')
+        expiry = request.POST.get('expiry')
+        cvv = request.POST.get('cvv')
+        
+        product = get_object_or_404(Product, id=product_id)
+        cart_item = get_object_or_404(CartItem, cart=request.user.cart, product=product)
+        
+        # Create an order for the selected product
+        order = Order.objects.create(
+            name=name,
+            email=email,
+            address=address,
+            card_number=card_number,
+            expiry=expiry,
+            cvv=cvv,
+            user=request.user
+        )
+        
+        # Create an OrderItem for the selected product
+        OrderItem.objects.create(
+            order=order,
+            product=product,
+            quantity=cart_item.quantity
+        )
+        
+        # Remove the ordered item from the user's cart
+        cart_item.delete()
+        
+        # Redirect to order detail page for the newly created order
+        return redirect('order_detail', order_id=order.id)
+    else:
+        return render(request, 'buynow.html')
+
+
+@login_required
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    ordered_items = OrderItem.objects.filter(order=order)
+    return render(request, 'Order/order_details.html', {'order': order, 'ordered_items': ordered_items})
+
 def product(request):
     products = Product.objects.all()
     return render(request, 'Products/product.html', {'products': products})
@@ -49,7 +105,6 @@ def add_to_cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         product = get_object_or_404(Product, id=product_id)
-        
         user_cart, created = Cart.objects.get_or_create(user=request.user)
         cart_item, created = CartItem.objects.get_or_create(cart=user_cart, product=product)
         
@@ -59,24 +114,24 @@ def add_to_cart(request):
         else:
             cart_item.quantity += 1 
             cart_item.item_price += Decimal(str(product.price))
-        
-        # Convert total_price to Decimal if it's not already
         user_cart.total_price = Decimal(str(user_cart.total_price))
-        
         user_cart.total_price += Decimal(str(product.price))
-        print(user_cart.total_price)  # Debugging print statement
-        
-        # Save the cart item and the cart
+        print(user_cart.total_price)
         with transaction.atomic():
             cart_item.save()
             user_cart.save()
-        
     return redirect('cart')
 
+@login_required
 def remove_from_cart(request, cart_item_id):
     cart_item = get_object_or_404(CartItem, id=cart_item_id)
+    user_cart = cart_item.cart
+    user_cart.total_price -= cart_item.item_price * cart_item.quantity
+    user_cart.save()
     cart_item.delete()
+
     return redirect('cart')
+
 
 def increment_quantity(request, cart_item_id):
     cart_item = get_object_or_404(CartItem, id=cart_item_id)
@@ -95,9 +150,16 @@ def decrement_quantity(request, cart_item_id):
 
 def buy_now(request):
     if request.method == 'POST':
-        product_id = request.POST.get('product_id')
-        product = get_object_or_404(Product, id=product_id)
-        return render(request, 'Products/buynow.html', {'products': [product]})
+        try:
+            user_cart = Cart.objects.get(user=request.user)
+            cart_items = user_cart.cartitem_set.all()
+            context = {
+                'cart': user_cart,
+                'cart_items': cart_items,
+            }
+            return render(request, 'Products/buynow.html', context)
+        except Cart.DoesNotExist:
+            return render(request, 'error.html', {'message': 'Cart not found.'})
     else:
         return HttpResponseNotAllowed(['POST'])
 
@@ -110,9 +172,17 @@ def view_added_products(request):
         return render(request, 'error.html', {'message': 'User ID not found in session.'})
     
 def buy_now_from_cart(request):
-    user_cart = Cart.objects.get(user=request.user)
-    cart_items = user_cart.items.all()
-    return render(request, 'Products/buynow.html', {'products': cart_items, 'user_cart': user_cart})
+    if request.method == 'POST':
+        try:
+            user_cart = Cart.objects.get(user=request.user)
+            cart_items = user_cart.cartitem_set.all()
+            context = {
+                'cart': user_cart,
+                'cart_items': cart_items,
+            }
+            return render(request, 'Products/buynow.html', context)
+        except Cart.DoesNotExist:
+            return render(request, 'error.html', {'message': 'Cart not found.'})
 
 def profile(request):
     # username="disha"
