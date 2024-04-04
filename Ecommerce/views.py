@@ -26,10 +26,6 @@ def user_logout(request):
     logout(request)
     return redirect('index') 
 
-def index(request):
-    category = Category.objects.all()
-    return render(request,'index.html',{'category': category})
-
 def custom_login(request):
     return render(request,'Accounts/login.html')
 
@@ -265,3 +261,52 @@ def search_product(request):
     query = request.GET.get('query')
     products = Product.objects.filter(name__icontains=query)
     return render(request, 'search/search_results.html', {'products': products, 'query': query})
+
+def index(request):
+    top_selling_products = Product.objects.filter(is_top_selling=True)
+    top_deal_products = Product.objects.filter(is_top_deal=True)
+    category = Category.objects.all()
+    return render(request, 'index.html', {'top_selling_products': top_selling_products, 'top_deal_products': top_deal_products, 'category': category})
+
+@login_required
+def order(request):
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'Order/order.html', {'orders': orders})
+
+@login_required
+def place_order(request, product_id):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        card_number = request.POST.get('card_number')
+        expiry = request.POST.get('expiry')
+        cvv = request.POST.get('cvv')
+        
+        product = get_object_or_404(Product, id=product_id)
+        # Pre-fill the order form with data from the buy now form
+        order_form_data = {
+            'user': request.user,  # Assuming you want to associate the order with the logged-in user
+            'products': [product],  # Assuming you want to order only one product
+            'price': product.price,  # Assuming you want to use the product's price
+            'quantity': 1,  # Assuming you want to order only one quantity
+            'payment_mode': 'Credit Card',  # Assuming you want to set a default payment mode
+            'order_date': timezone.now(),  # Assuming you want to use the current time as the order date
+            'shipment_date': timezone.now(),  # Assuming you want to use the current time as the shipment date
+            'track_order': 'Pending',  # Assuming you want to set a default tracking status
+            'discount': 0  # Assuming there is no discount initially
+        }
+        
+        order_form = OrderForm(order_form_data)
+        
+        if order_form.is_valid():
+            order = order_form.save()
+            OrderItem.objects.create(order=order, product=product, quantity=1)  # Assuming you want to order only one quantity
+            # If you're using a cart, you may want to remove the item from the cart here
+            # cart_item.delete()
+            return redirect('order_detail', order_id=order.id)
+    else:
+        # Render the buy now form
+        return render(request, 'buynow.html')
+
+    return render(request, 'buynow.html', {'order_form': order_form})  # If form is invalid, render with form errors

@@ -1,4 +1,5 @@
 from asyncio import AbstractServer
+from itertools import count
 from typing import AbstractSet
 from django.db import models
 from django.contrib.auth.models import User
@@ -63,6 +64,7 @@ class CartItem(models.Model):
         super().save(*args, **kwargs)
 
 class Order(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField()
@@ -75,7 +77,7 @@ class Order(models.Model):
         return self.name
 
 class Shipment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product)
     status = models.BooleanField()
     payment_mode = models.CharField(max_length=255)
