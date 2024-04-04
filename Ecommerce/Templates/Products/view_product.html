@@ -1,0 +1,135 @@
+{% include 'helper/header.html' %}
+<style>
+    #products {
+        margin-top: 30px;
+        position: relative;
+        width: 100%;
+    }
+    
+    .product-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0px 4px 8px rgba(1,1,1,1);
+    }
+    
+    .producat_wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14rem;
+        width: 90%;
+    }
+    
+    .producat_image img {
+        display: block;
+        object-fit: cover;
+        width: 100%;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .company_txt {
+        color: Orange
+        font-weight: 600;
+        letter-spacing: 2px;
+        font-size: 1.5rem;
+        margin-top: 1rem;
+    }
+    
+    .producat_content {
+        width: 100%;
+        margin-top: 2rem;
+    }
+    
+    .producat_des {
+        margin-top: 1.5rem;
+        font-size: 1.2rem;
+        line-height: 1.5;
+        color: var(--Darkgrayish);
+    }
+    
+    .price {
+        margin-top: 1.5rem;
+    }
+    
+    .total_price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--Grayish);
+    }
+    
+    .qty {
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .btns button {
+        outline: none;
+        border: none;
+        background-color: var(--Lightgrayish);
+        color: var(--Orange);
+        padding: 0.7rem 1.2rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+    
+    .qty_numbers {
+        color: var(--Darkgrayish);
+        font-weight: 600;
+        width: 4rem;
+        text-align: center;
+        margin: 0 0.5rem;
+    }
+    
+    .add_cart {
+        outline: none;
+        border: none;
+        background-color: var(--Orange);
+        font-family: inherit;
+        color: var(--White);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 2rem;
+        border-radius: 5px;
+        margin-top: 2rem;
+        cursor: pointer;
+    }
+    
+    .add_cart svg {
+        margin-right: 1rem;
+    }
+</style>
+
+<main id="products">
+    <div class="container">
+        <div class="product-card">
+            <div class="producat_wrapper">
+                <div class="producat_image">
+                    <img src="{{ product.image }}" alt="{{ product.name }}">
+                </div>
+                <div class="producat_content">
+                    <p class="company_txt">{{ product.name }}</p>
+                    <p class="producat_des">{{ product.description }}</p>
+                    <div class="price">
+                        <p class="total_price">${{ product.price }}</p>
+                    </div>
+                    
+                    <form action="{% url 'add_to_cart' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <button type="submit" class="add_cart">Add to Cart</button>
+                    </form>
+                    <form id="buyNowFormcart" action="{% url 'buy_now_from_cart' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="add_cart">Buy Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% include 'helper/footer.html' %}
