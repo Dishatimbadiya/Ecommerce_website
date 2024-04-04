@@ -24,8 +24,8 @@ urlpatterns = [
     path('decrement_quantity/<int:cart_item_id>/', views.decrement_quantity, name='decrement_quantity'),
     path('product/<int:product_id>/', views.view_product, name='view_product'),
     path('order/', views.order, name='order'),
-    path('place_order/', views.place_order, name='place_order'),
-    path('order_detail/<int:order_id>/', views.order_detail, name='order_detail'),
     path('category/<int:category_id>/', views.category_products, name='category_products'),
     path('search/', views.search_product, name='search_product'),
+    path('buy_all/',views.buy_all,name='buy_all')   #buy_all is for place order
+
 ]

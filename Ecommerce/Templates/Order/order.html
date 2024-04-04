@@ -50,18 +50,19 @@
         background-color: #0056b3;
     }
 </style>
+
 {% block content %}
-<h1>Your Orders</h1>
+<center><h1>Your Orders</h1><center>
 <div class="card-container">
-    {% for order in orders %}
+    {% for ordered_item in ordered_items %}
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Order #{{ order.id }}</h5>
-            <p class="card-text">Name: {{ order.name }}</p>
-            <p class="card-text">Email: {{ order.email }}</p>
-            <p class="card-text">Address: {{ order.address }}</p>
-            <p class="card-text">Order Date: {{ order.order_date }}</p>
-            <a href="{% url 'order_detail' order_id=order.id %}" class="btn btn-primary">View Details</a>
+            <h4 class="card-title">{{ ordered_item.product.name}}</h4>
+            <p class="card-text">Order_ID: {{ ordered_item.order.id }}</p>
+            <p class="card-text">Quantity: {{ ordered_item.quantity }}</p>
+            <p class="card-text">Price: {{ ordered_item.order.price }}</p>
+            <p class="card-text">Order Date: {{ ordered_item.order.order_date }}</p>             
+            <p class="card-text">Shipment Date: {{ ordered_item.order.shipment_date }}</p> 
         </div>
     </div>
     {% endfor %}
