@@ -2,11 +2,12 @@ from multiprocessing import AuthenticationError
 from django import forms
 from .models import *
 from .Templates import *
+from ckeditor.fields import RichTextField
 
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'price', 'image', 'discount', 'quantity', 'category', 'brand']
+        fields = ['name', 'description', 'price', 'image', 'discount', 'quantity', 'category', 'brand','Product_details']
 
 
 class LoginForm(forms.Form):

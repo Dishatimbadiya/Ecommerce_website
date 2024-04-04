@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Ecommerce'
+    'Ecommerce',
+    'ckeditor',
+
 ]
 
 MIGRATION_MODULES = {
@@ -74,6 +76,18 @@ TEMPLATES = [
     },
 ]
 
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': 800,
+    },
+}
+
+
+STATIC_ROOT = '/path/to/static/files/'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'Ecommerce/static'),

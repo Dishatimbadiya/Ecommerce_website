@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core import validators
 from django.dispatch import receiver
+from ckeditor.fields import RichTextField
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -29,6 +30,9 @@ class Product(models.Model):
     brand = models.CharField(max_length=255, null=True, blank=True)
     rating = models.FloatField(default=0.0)
     created_at = models.DateTimeField(auto_now_add=True)
+    Product_details = RichTextField()
+    is_top_deal = models.BooleanField(default=False)
+    is_top_selling = models.BooleanField(default=False) 
     def __str__(self):
         return self.name
 
