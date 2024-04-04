@@ -1,5 +1,4 @@
 {% include 'helper/header.html' %}
-<!-- category_products.html -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,18 +11,31 @@
 
 <body>
     <h1>{{ category.name }} Products</h1>
-    <div class="product-container">
-        {% if category_products %}
-        {% for product in category_products %}
-        <div class="product-card">
-            <h2>{{ product.name }}</h2>
-            <p>Description: {{ product.description }}</p>
-            <p>Price: ${{ product.price }}</p>
+    <div class="container my-5">
+        <h2 class="text-center mb-4"></h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for product in products %}
+    
+            <div class="col text-center">
+                <div class="card h-90">
+                    <img src="{{ product.image }}" class="card-img-top" alt="Product">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.price }}</p>
+                        <p class="card-text">{{ product.description }}</p>
+                        <a href="{% url 'view_product' product.id %}" class="btn btn-primary mb-2">View Details</a>
+    
+                        <form action="{% url 'add_to_cart' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <button type="submit" class="btn btn-warning">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+           
         </div>
-        {% endfor %}
-        {% else %}
-        <p>No products available in this category.</p>
-        {% endif %}
     </div>
 </body>
 

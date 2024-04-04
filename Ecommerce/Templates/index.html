@@ -53,10 +53,8 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ category.name }}</h5>
                         <p class="card-text">{{ category.description }}</p>
-                        <form action="cart.html" method="GET">
-                            <input type="hidden" name="product" value="Virtual Reality Glasses">
-                            <input type="hidden" name="price" value="299.00">
-                            <input type="hidden" name="quantity" value="1">
+                        <form action="{% url 'category_products' category.id %}" method="GET">
+                            <input type="hidden" name="category_id" value="{{ category.id }}">
                             <input type="submit" class="btn btn-warning" value="Explore Now">
                         </form>
                     </div>
