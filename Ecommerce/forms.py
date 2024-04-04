@@ -28,7 +28,3 @@ class RegistrationForm(forms.ModelForm):
         model = UserProfile
         fields = ['role', 'email', 'phone_number']
 
-class OrderForm(forms.ModelForm):
-    class Meta:
-        model = Order
-        fields = ['products', 'price', 'quantity', 'payment_mode', 'order_date', 'shipment_date', 'track_order', 'discount']
