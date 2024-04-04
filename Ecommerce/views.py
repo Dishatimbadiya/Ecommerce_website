@@ -12,6 +12,8 @@ from h11 import PRODUCT_ID
 from django.db import transaction
 from .models import *
 from .forms import *
+from django.utils import timezone
+
 
 @login_required
 def profile(request):
@@ -31,56 +33,15 @@ def custom_login(request):
 
 @login_required
 def order(request):
-    orders = Order.objects.filter(user=request.user)
-    return render(request, 'Order/order.html', {'orders': orders})
+    orders = Order.objects.get(user=request.user)
+    ordered_items = OrderItem.objects.filter(order=orders)
+
+    return render(request, 'Order/order.html', {'orders': orders, 'ordered_items': ordered_items})
 
 def category_products(request, category_id):
     category = Category.objects.get(pk=category_id)
     products = Product.objects.filter(category=category)
     return render(request, 'Category/view_category_products.html', {'products': products})
-
-@login_required
-def place_order(request, product_id):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        address = request.POST.get('address')
-        card_number = request.POST.get('card_number')
-        expiry = request.POST.get('expiry')
-        cvv = request.POST.get('cvv')
-        
-        product = get_object_or_404(Product, id=product_id)
-        cart_item = get_object_or_404(CartItem, cart=request.user.cart, product=product)
-        
-        # Create an order for the selected product
-        order = Order.objects.create(
-            name=name,
-            email=email,
-            address=address,
-            card_number=card_number,
-            expiry=expiry,
-            cvv=cvv,
-            user=request.user
-        )
-        
-        OrderItem.objects.create(
-            order=order,
-            product=product,
-            quantity=cart_item.quantity
-        )
-        
-        cart_item.delete()
-        
-        return redirect('order_detail', order_id=order.id)
-    else:
-        return render(request, 'buynow.html')
-
-
-@login_required
-def order_detail(request, order_id):
-    order = get_object_or_404(Order, id=order_id)
-    ordered_items = OrderItem.objects.filter(order=order)
-    return render(request, 'Order/order_details.html', {'order': order, 'ordered_items': ordered_items})
 
 def product(request):
     products = Product.objects.all()
@@ -268,13 +229,7 @@ def index(request):
     category = Category.objects.all()
     return render(request, 'index.html', {'top_selling_products': top_selling_products, 'top_deal_products': top_deal_products, 'category': category})
 
-@login_required
-def order(request):
-    orders = Order.objects.filter(user=request.user)
-    return render(request, 'Order/order.html', {'orders': orders})
-
-@login_required
-def place_order(request, product_id):
+def buy_all(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
@@ -282,31 +237,42 @@ def place_order(request, product_id):
         card_number = request.POST.get('card_number')
         expiry = request.POST.get('expiry')
         cvv = request.POST.get('cvv')
-        
-        product = get_object_or_404(Product, id=product_id)
-        # Pre-fill the order form with data from the buy now form
-        order_form_data = {
-            'user': request.user,  # Assuming you want to associate the order with the logged-in user
-            'products': [product],  # Assuming you want to order only one product
-            'price': product.price,  # Assuming you want to use the product's price
-            'quantity': 1,  # Assuming you want to order only one quantity
-            'payment_mode': 'Credit Card',  # Assuming you want to set a default payment mode
-            'order_date': timezone.now(),  # Assuming you want to use the current time as the order date
-            'shipment_date': timezone.now(),  # Assuming you want to use the current time as the shipment date
-            'track_order': 'Pending',  # Assuming you want to set a default tracking status
-            'discount': 0  # Assuming there is no discount initially
-        }
-        
-        order_form = OrderForm(order_form_data)
-        
-        if order_form.is_valid():
-            order = order_form.save()
-            OrderItem.objects.create(order=order, product=product, quantity=1)  # Assuming you want to order only one quantity
-            # If you're using a cart, you may want to remove the item from the cart here
-            # cart_item.delete()
-            return redirect('order_detail', order_id=order.id)
-    else:
-        # Render the buy now form
-        return render(request, 'buynow.html')
 
-    return render(request, 'buynow.html', {'order_form': order_form})  # If form is invalid, render with form errors
+        # Retrieve all carts for the current user
+        user_carts = Cart.objects.filter(user=request.user)
+
+        # Process each cart
+        for user_cart in user_carts:
+            # Create an order for the current cart
+            order = Order.objects.create(
+                user=request.user,
+                price=user_cart.total_price, 
+                payment_mode='Card',
+                order_date=timezone.now(),
+                shipment_date=timezone.now()
+            )
+
+            # Iterate over cart items and create order items
+            cart_items = CartItem.objects.filter(cart=user_cart)
+            for cart_item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    product=cart_item.product,
+                    quantity=cart_item.quantity
+                )
+
+                # Update product quantity based on the order
+                cart_item.product.quantity -= cart_item.quantity
+                cart_item.product.save()
+
+            # Clear the user's cart after creating the order
+            user_cart.items.clear()
+            user_cart.total_price = 0
+            user_cart.save()
+
+        # Redirect to the order page
+        return redirect('order')
+
+    else:
+        messages.error(request, 'Invalid Request')
+        return redirect('cart')
