@@ -1,6 +1,54 @@
 {% include 'helper/header.html' %}
 {% include 'helper/cssfile.html' %}
+<style>
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        text-align: center;
+        margin: 20PX;
+        background-color: black;
+        color: white;
+    }
 
+
+    .button {
+        display: inline-block;
+        font-weight: 400;
+        line-height: 1.5;
+        color: black;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        background-color: tan;
+        border: 2px solid black;
+        margin: auto;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        border-radius: .25rem;
+    }
+
+    .button:hover {
+        background-color: rgb(84, 84, 84);
+    }
+
+    .button:active {
+        background-color: #302f2e;
+    }
+
+
+    .button-container form {
+        display: inline;
+        margin-right: 10px;
+    }
+</style>
 <div class="container my-5">
     <h2 class="text-center mb-4"></h2>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -12,12 +60,15 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ product.name }}</h5>
                     <p class="card-text">{{ product.price }}</p>
-                    <a href="{% url 'view_product' product.id %}" class="btn btn-primary mb-2">View Details</a>
-
-                    <form action="{% url 'add_to_cart' %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="product_id" value="{{ product.id }}">
-                        <button type="submit" class="btn btn-warning">Add to Cart</button>
+                    <form class="button-container">
+                        <form>
+                            <a href="{% url 'view_product' product.id %}" class="button">View Details</a>
+                        </form>
+                        <form action="{% url 'add_to_cart' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <button type="submit" class="button">Add to Cart</button>
+                        </form>
                     </form>
                 </div>
             </div>

@@ -67,17 +67,14 @@ def place_order(request, product_id):
             user=request.user
         )
         
-        # Create an OrderItem for the selected product
         OrderItem.objects.create(
             order=order,
             product=product,
             quantity=cart_item.quantity
         )
         
-        # Remove the ordered item from the user's cart
         cart_item.delete()
         
-        # Redirect to order detail page for the newly created order
         return redirect('order_detail', order_id=order.id)
     else:
         return render(request, 'buynow.html')
@@ -135,10 +132,11 @@ def add_to_cart(request):
 def remove_from_cart(request, cart_item_id):
     cart_item = get_object_or_404(CartItem, id=cart_item_id)
     user_cart = cart_item.cart
-    user_cart.total_price -= cart_item.item_price * cart_item.quantity
+    print(cart_item.item_price)
+    print(cart_item.quantity)
+    user_cart.total_price -= (cart_item.item_price)    
     user_cart.save()
     cart_item.delete()
-
     return redirect('cart')
 
 
@@ -154,7 +152,7 @@ def increment_quantity(request, cart_item_id):
 
 def decrement_quantity(request, cart_item_id):
     cart_item = get_object_or_404(CartItem, id=cart_item_id)
-    if cart_item.quantity > 1:
+    if cart_item.quantity >= 1:
         cart_item.quantity -= 1
         cart_item.item_price -= cart_item.product.price 
         cart_item.save()

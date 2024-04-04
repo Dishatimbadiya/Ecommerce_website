@@ -174,3 +174,7 @@ button:active {
     .card-link {
         color: tan;
     }
+    .button-container form {
+        display: inline;
+        margin-right: 10px;
+    }

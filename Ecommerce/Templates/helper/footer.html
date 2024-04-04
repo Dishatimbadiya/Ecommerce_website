@@ -10,12 +10,12 @@
 </footer>
 
 <script>
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         var footer = document.getElementById('footer');
         var scrollPosition = window.scrollY + window.innerHeight;
         var documentHeight = document.body.offsetHeight;
 
-        if (scrollPosition >= documentHeight-1) {
+        if (scrollPosition >= documentHeight - 1) {
             // User has scrolled to near the end of the page, show the footer
             footer.classList.remove('hidden-footer');
         } else {
@@ -27,8 +27,10 @@
 
 <style>
     body {
-        margin-bottom: 200px; /* Adjust this value based on your footer height */
+        margin-bottom: 200px;
+        /* Adjust this value based on your footer height */
     }
+
     .hidden-footer {
         opacity: 0;
         transition: opacity 0.5s ease;

@@ -1,13 +1,20 @@
 {% include 'helper/header.html' %}
 {% include 'helper/cssfile.html' %}
 <style>
-    /* Banner */
     .banner-image {
         background: url('img/banner.jpg') no-repeat center center / cover;
         min-height: 600px;
     }
 
-    /* Feature Products Card */
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        text-align: center;
+        margin: 20PX;
+        background-color: black;
+        color: white;
+    }
+
     .card-title a {
         color: #333;
         text-decoration: none;
@@ -24,6 +31,38 @@
     .text-white {
         color: #000 !important;
     }
+
+    .button {
+        display: inline-block;
+        font-weight: 400;
+        line-height: 1.5;
+        color: black;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        background-color: tan;
+        border: 2px solid black;
+        margin: auto;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        border-radius: .25rem;
+    }
+
+    .button:hover {
+        background-color: rgb(84, 84, 84);
+    }
+
+    .button:active {
+        background-color: #302f2e;
+    }
 </style>
 <!DOCTYPE html>
 <html lang=“en”>
@@ -38,14 +77,14 @@
 </head>
 
 <body>
-    <!--- Banner -->
-    <section class="container-fluid">
+    </hr>
+    <section class="container">
         <div class="row">
-            <div class="col-md-12 d-flex align-items-center justify-content-center bg-warning text-white p-5">
+            <div style="background-color: tan; color: black; padding: 20px;">
                 <div>
                     <h1>Explore Exciting Products at our Store!</h1>
                     <p class="mb-4"><em>Discover a wide range of high-quality products that suit your needs.</em></p>
-                    <a href="{% url 'product' %}" class="btn btn-light btn-lg">Browse Products &#10142;</a>
+                    <a href="{% url 'product' %}" class="btn btn-light btn-dark">Browse Products &#10142;</a>
                 </div>
             </div>
         </div>
@@ -64,13 +103,12 @@
                         <p class="card-text">{{ category.description }}</p>
                         <form action="{% url 'category_products' category.id %}" method="GET">
                             <input type="hidden" name="category_id" value="{{ category.id }}">
-                            <input type="submit" class="btn btn-warning" value="Explore Now">
+                            <input type="submit" class="button" value="Explore Now">
                         </form>
                     </div>
                 </div>
             </div>
             {% endfor %}
-
         </div>
     </div>
     <hr>
