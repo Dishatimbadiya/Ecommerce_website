@@ -65,21 +65,22 @@
 <h2>Buy Now</h2>
 <div class="container">
     <div class="row">
-        Total Price :{{ user_cart.total_price }}
-        {% for product in products %}
+        Total Price :{{ cart.total_price }}
+        {% for cart_item in cart_items %}
         <div class="column">
             <div class="card bg-dark text-white" style="width: 18rem;">
-                <img class="card-img-top" src="../../{{ product.image }}" alt="Card image cap">
+                <img class="card-img-top" src="../../{{ cart_item.product.image }}" alt="Card image cap">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
-                            <h5 class="card-title">{{ product.name }}</h5>
+                            <h5 class="card-title">{{ cart_item.product.name }}</h5>
                         </div>
                         <div class="col-6 text-right">
-                            <p class="card-text">{{ product.price }}</p>
+                            <p class="card-text">{{ cart_item.product.price }}</p>
+                            <p>Quantity: {{ cart_item.quantity }}</p>
                         </div>
                     </div>
-                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text">{{ cart_item.product.description }}</p>
                 </div>
             </div>
         </div>
