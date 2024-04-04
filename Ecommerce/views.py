@@ -90,7 +90,15 @@ def order_detail(request, order_id):
 
 def product(request):
     products = Product.objects.all()
-    return render(request, 'Products/product.html', {'products': products})
+
+    data = {
+        'products' : products
+    }
+    return render(request, 'Products/product.html',data)
+
+def view_product(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    return render(request, 'Products/view_product.html', {'product': product})
 
 @login_required
 def cart(request):

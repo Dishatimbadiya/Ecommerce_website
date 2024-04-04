@@ -1,80 +1,31 @@
 {% include 'helper/header.html' %}
-<style>
-    img {
-        height: 225px;
-        width: 70px;
-    }
 
-    .column {
-        float: left;
-        width: 25%;
-        padding: 0 10px;
-    }
-
-    .row {
-        margin: 0 -5px;
-    }
-
-    .row:after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-
-    @media screen and (max-width: 600px) {
-        .column {
-            width: 100%;
-            display: block;
-            margin-bottom: 20px;
-        }
-    }
-
-    .card {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        padding: 20px;
-        text-align: center;
-        margin: 20PX;
-    }
-
-    .card-link {
-        color: tan;
-    }
-</style>
-<h1> Product...</h1>
-<div class="container">
-    <div class="row">
+<div class="container my-5">
+    <h2 class="text-center mb-4"></h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {% for product in products %}
-        <div class="column">
-            <div class="card bg-dark text-white" style="width: 18rem;">
-                <img class="card-img-top" src="{{ product.image }}" alt="Card image cap">
+
+        <div class="col text-center">
+            <div class="card h-90">
+                <img src="{{ product.image }}" class="card-img-top" alt="Product">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <h5 class="card-title">{{ product.name }}</h5>
-                        </div>
-                        <div class="col-6 text-right">
-                            <p class="card-text">{{ product.price }}</p>
-                        </div>
-                    </div>
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.price }}</p>
                     <p class="card-text">{{ product.description }}</p>
-                </div>
-                {% if request.session.user_role == 'buyer' %}
-                <div class="card-body">
-                    <form id="buyNowForm" action="{% url 'buy_now' %}" method="post">
+                    <a href="{% url 'view_product' product.id %}" class="btn btn-primary mb-2">View Details</a>
+
+                    <form action="{% url 'add_to_cart' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="product_id" value="{{ product.id }}">
-                        <button>Buy Now</button>
-                    </form>
-                    <form id="buyNowForm" action="{% url  'add_to_cart' %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="product_id" value="{{ product.id }}">
-                        <button>Add to cart</button>
+                        <button type="submit" class="btn btn-warning">Add to Cart</button>
                     </form>
                 </div>
-                {% endif %}
             </div>
         </div>
         {% endfor %}
+       
     </div>
 </div>
+<hr>
+
 {% include 'helper/footer.html' %}
