@@ -262,3 +262,8 @@ def register(request):
         profile_form = RegistrationForm()
 
     return render(request, 'Accounts/register.html', {'user_form': user_form, 'profile_form': profile_form})
+
+def search_product(request):
+    query = request.GET.get('query')
+    products = Product.objects.filter(name__icontains=query)
+    return render(request, 'search/search_results.html', {'products': products, 'query': query})
