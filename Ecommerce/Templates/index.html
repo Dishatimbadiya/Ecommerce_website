@@ -34,22 +34,21 @@
         <div class="row">
             <div class="col-md-12 d-flex align-items-center justify-content-center bg-warning text-white p-5">
                 <div>
-                    <h1>Discover the Future With CoolGadgets!</h1>
-                    <p class="mb-4"><em>Innovation is not solely about major discoveries.<br>It's about constantly
-                            challenging the status quo.</em></p>
-                    <a href="{% url 'product' %}" class="btn btn-light btn-lg">Shop Now &#10142;</a>
+                    <h1>Explore Exciting Products at our Store!</h1>
+                    <p class="mb-4"><em>Discover a wide range of high-quality products that suit your needs.</em></p>
+                    <a href="{% url 'product' %}" class="btn btn-light btn-lg">Browse Products &#10142;</a>
                 </div>
             </div>
         </div>
     </section>
+    
 
-    <!--- Featured Products -->
     <div class="container my-5">
         <h2 class="text-center mb-4">Categories</h2>
-        <div class="row row-cols-3 row-cols-md-3 row-cols-lg-4 g-4">
+        <div class="row row-cols-3 row-cols-md-3 row-cols-lg-3 g-4">
             {% for category in category %}
             <div class="col text-center">
-                <div class="card h-100">
+                <div class="card h-70">
                     <img src="{{ category.image }}" class="card-img-top" alt="Product">
                     <div class="card-body">
                         <h5 class="card-title">{{ category.name }}</h5>

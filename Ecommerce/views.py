@@ -27,7 +27,8 @@ def user_logout(request):
     return redirect('index') 
 
 def index(request):
-    return render(request,'index.html')
+    category = Category.objects.all()
+    return render(request,'index.html',{'category': category})
 
 def custom_login(request):
     return render(request,'Accounts/login.html')
@@ -202,10 +203,6 @@ def buy_now_from_cart(request):
             return render(request, 'error.html', {'message': 'Cart not found.'})
 
 def profile(request):
-    # username="disha"
-    # context={
-    #     'username':username
-    # }
     return render(request,'Accounts/profile.html')
 
 def thankyou(request):
