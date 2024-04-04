@@ -136,17 +136,26 @@ def remove_from_cart(request, cart_item_id):
 def increment_quantity(request, cart_item_id):
     cart_item = get_object_or_404(CartItem, id=cart_item_id)
     cart_item.quantity += 1
+    cart_item.item_price += cart_item.product.price  # Increment the item price
     cart_item.save()
+    user_cart = cart_item.cart
+    user_cart.total_price += cart_item.product.price
+    user_cart.save()
     return redirect('cart')
 
 def decrement_quantity(request, cart_item_id):
     cart_item = get_object_or_404(CartItem, id=cart_item_id)
     if cart_item.quantity > 1:
         cart_item.quantity -= 1
+        cart_item.item_price -= cart_item.product.price 
         cart_item.save()
     else:
         cart_item.delete()
+    user_cart = cart_item.cart
+    user_cart.total_price -= cart_item.product.price
+    user_cart.save()
     return redirect('cart')
+
 
 def buy_now(request):
     if request.method == 'POST':

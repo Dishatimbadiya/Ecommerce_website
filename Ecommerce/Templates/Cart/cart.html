@@ -60,6 +60,18 @@
                         </div>
                     </div>
                     <p class="card-text">{{ cart_item.product.description }}</p>
+                    <form action="{% url 'increment_quantity' cart_item.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Increment Quantity</button>
+                    </form>
+                    <form action="{% url 'decrement_quantity' cart_item.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning">Decrement Quantity</button>
+                    </form>
+                    <form action="{% url 'remove_from_cart' cart_item.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Remove from Cart</button>
+                    </form>
                 </div>
             </div>
         </div>
