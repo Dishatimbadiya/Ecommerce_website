@@ -40,6 +40,40 @@
     .card-link {
         color: tan;
     }
+
+    .button {
+        display: inline-block;
+        font-weight: 400;
+        line-height: 1.5;
+        color: black;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        background-color: tan;
+        border: 2px solid black;
+        margin: auto;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        border-radius: .25rem;
+    }
+
+    .button:hover {
+        background-color: rgb(219, 218, 218);
+        color: black;
+    }
+
+    .button:active {
+        background-color: #cfcfcf;
+        color: black;
+    }
 </style>
 <h1>Your Product...</h1>
 <div class="container">
@@ -50,14 +84,15 @@
                 <img class="card-img-top" src="../../{{ product.image }}" alt="Card image cap">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12">
                             <h5 class="card-title">{{product.name }}</h5>
                         </div>
-                        <div class="col-6 text-right">
+                        <div class="col-12">
                             <p class="card-text">{{product.price }}</p>
                         </div>
                     </div>
                     <p class="card-text">{{ product.description }}</p>
+                    <a href="{% url 'edit_product' product.id %}" class="button">Edit</a>
                 </div>
             </div>
         </div>

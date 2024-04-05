@@ -26,6 +26,7 @@ urlpatterns = [
     path('order/', views.order, name='order'),
     path('category/<int:category_id>/', views.category_products, name='category_products'),
     path('search/', views.search_product, name='search_product'),
-    path('buy_all/',views.buy_all,name='buy_all')   #buy_all is for place order
+    path('buy_all/',views.buy_all,name='buy_all'),
+    path('product/edit/<int:product_id>/', views.edit_product, name='edit_product'),
 
 ]

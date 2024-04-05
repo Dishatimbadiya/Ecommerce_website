@@ -239,12 +239,9 @@ def buy_all(request):
         expiry = request.POST.get('expiry')
         cvv = request.POST.get('cvv')
 
-        # Retrieve all carts for the current user
         user_carts = Cart.objects.filter(user=request.user)
 
-        # Process each cart
         for user_cart in user_carts:
-            # Create an order for the current cart
             order = Order.objects.create(
                 user=request.user,
                 price=user_cart.total_price, 
@@ -253,7 +250,6 @@ def buy_all(request):
                 shipment_date=timezone.now()
             )
 
-            # Iterate over cart items and create order items
             cart_items = CartItem.objects.filter(cart=user_cart)
             for cart_item in cart_items:
                 OrderItem.objects.create(
@@ -262,18 +258,29 @@ def buy_all(request):
                     quantity=cart_item.quantity
                 )
 
-                # Update product quantity based on the order
                 cart_item.product.quantity -= cart_item.quantity
                 cart_item.product.save()
 
-            # Clear the user's cart after creating the order
             user_cart.items.clear()
             user_cart.total_price = 0
             user_cart.save()
 
-        # Redirect to the order page
         return redirect('order')
 
     else:
         messages.error(request, 'Invalid Request')
         return redirect('cart')
+    
+def edit_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            user_id = request.session.get('userid')
+            if user_id is not None:
+                products = Product.objects.filter(seller=user_id)
+                return render(request, 'Products/view_added_products.html', {'products': products})
+    else:
+        form = ProductForm(instance=product)
+    return render(request, 'Products/edit_product.html', {'form': form, 'product': product})
