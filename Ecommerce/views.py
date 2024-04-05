@@ -110,7 +110,7 @@ def increment_quantity(request, cart_item_id):
 
 def decrement_quantity(request, cart_item_id):
     cart_item = get_object_or_404(CartItem, id=cart_item_id)
-    if cart_item.quantity >= 1:
+    if cart_item.quantity > 1:
         cart_item.quantity -= 1
         cart_item.item_price -= cart_item.product.price 
         cart_item.save()
