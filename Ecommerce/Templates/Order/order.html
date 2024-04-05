@@ -52,22 +52,30 @@
 </style>
 
 {% block content %}
-<center><h1>Your Orders</h1><center>
+<center><h1>Your Orders</h1></center>
 <div class="card-container">
-    {% for ordered_item in ordered_items %}
+    {% for order in orders %}
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">{{ ordered_item.product.name}}</h4>
-            <p class="card-text">Order_ID: {{ ordered_item.order.id }}</p>
-            <p class="card-text">Quantity: {{ ordered_item.quantity }}</p>
-            <p class="card-text">Price: {{ ordered_item.order.price }}</p>
-            <p class="card-text">Order Date: {{ ordered_item.order.order_date }}</p>             
-            <p class="card-text">Shipment Date: {{ ordered_item.order.shipment_date }}</p> 
+            <h4 class="card-title">Order ID: {{ order.id }}</h4>
+            <p class="card-text">Order Date: {{ order.order_date }}</p>             
+            <p class="card-text">Shipment Date: {{ order.shipment_date }}</p>
+            <h5>Order Items:</h5>
+            <ul>
+                {% for ordered_item in ordered_items %}
+                {% if ordered_item.order == order %}
+                <li>
+                    <p>Product Name: {{ ordered_item.product.name }}</p>
+                    <p>Quantity: {{ ordered_item.quantity }}</p>
+                    <p>Price: {{ ordered_item.product.price }}</p>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
         </div>
     </div>
     {% endfor %}
 </div>
 {% endblock %}
-
 
 {% include 'helper/footer.html' %}

@@ -33,10 +33,11 @@ def custom_login(request):
 
 @login_required
 def order(request):
-    orders = Order.objects.get(user=request.user)
-    ordered_items = OrderItem.objects.filter(order=orders)
+    orders = Order.objects.filter(user=request.user)
+    ordered_items = OrderItem.objects.filter(order__in=orders)
 
     return render(request, 'Order/order.html', {'orders': orders, 'ordered_items': ordered_items})
+
 
 def category_products(request, category_id):
     category = Category.objects.get(pk=category_id)
