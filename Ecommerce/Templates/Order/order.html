@@ -8,16 +8,18 @@
     }
 
     .card {
-        width: 300px;
-        /* Adjust the width as needed */
+        width: 500px;
         margin: 20px;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s;
+        background-color: black;
+        color: white;
     }
 
-    .card:hover {
-        transform: translateY(-5px);
+    .card-img {
+        width: 100px;
+        height: 100px;
     }
 
     .card-body {
@@ -28,6 +30,7 @@
         font-size: 24px;
         font-weight: bold;
         margin-bottom: 10px;
+        color: tan;
     }
 
     .card-text {
@@ -36,8 +39,8 @@
     }
 
     .btn-primary {
-        background-color: #007bff;
-        color: #fff;
+        background-color: tan;
+        color: black;
         padding: 10px 20px;
         border: none;
         border-radius: 5px;
@@ -47,27 +50,32 @@
     }
 
     .btn-primary:hover {
-        background-color: #0056b3;
+        background-color: #636465;
     }
 </style>
 
 {% block content %}
-<center><h1>Your Orders</h1></center>
+
+<h1>Your Orders</h1>
 <div class="card-container">
     {% for order in orders %}
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">Order ID: {{ order.id }}</h4>
-            <p class="card-text">Order Date: {{ order.order_date }}</p>             
+            <p class="card-text">Order Date: {{ order.order_date }}</p>
             <p class="card-text">Shipment Date: {{ order.shipment_date }}</p>
-            <h5>Order Items:</h5>
+            <h5 class="card-title">Order Items:</h5>
             <ul>
                 {% for ordered_item in ordered_items %}
                 {% if ordered_item.order == order %}
                 <li>
-                    <p>Product Name: {{ ordered_item.product.name }}</p>
-                    <p>Quantity: {{ ordered_item.quantity }}</p>
-                    <p>Price: {{ ordered_item.product.price }}</p>
+                    <img src="../../{{ ordered_item.product.image }}" class="card-img" alt="Product">
+                    </br>
+                    <div class="container">
+                        <p>Product Name: {{ ordered_item.product.name }}</p>
+                        <p>Quantity: {{ ordered_item.quantity }}</p>
+                        <p>Price: {{ ordered_item.product.price }}</p>
+                    </div>
                 </li>
                 {% endif %}
                 {% endfor %}
@@ -77,5 +85,4 @@
     {% endfor %}
 </div>
 {% endblock %}
-
 {% include 'helper/footer.html' %}

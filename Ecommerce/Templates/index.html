@@ -57,11 +57,13 @@
     }
 
     .button:hover {
-        background-color: rgb(84, 84, 84);
+        background-color: #aeadad;
+        color: black;
     }
 
     .button:active {
-        background-color: #302f2e;
+        background-color: #aeadad;
+        color: black;
     }
 </style>
 <!DOCTYPE html>
@@ -124,8 +126,12 @@
                             <a href="{% url 'view_product' product.id %}" class="button">View Details</a>
                             <form action="{% url 'product' %}" method="post">
                                 {% csrf_token %}
-                                <!-- <input type="hidden" name="product_id" value="{{ product.id }}"> -->
-                                <button type="submit" class="button">Add to Cart</button>
+                                {% if user.is_authenticated %}
+                                <a href="{% url 'product' %}" class="button">Browse Products</a>
+                                {% else %}
+                                <a href="{% url 'login' %}" class="button">Browse Products</a>
+                                {% endif %}
+
                             </form>
                         </form>
                     </div>
@@ -146,8 +152,11 @@
                             <a href="{% url 'view_product' product.id %}" class="button">View Details</a>
                             <form action="{% url 'product' %}" method="post">
                                 {% csrf_token %}
-                                <input type="hidden" name="product_id" value="{{ product.id }}">
-                                <button type="submit" class="button">Add to Cart</button>
+                                {% if user.is_authenticated %}
+                                <a href="{% url 'product' %}" class="button">Browse Products</a>
+                                {% else %}
+                                <a href="{% url 'login' %}" class="button">Browse Products</a>
+                                {% endif %}
                             </form>
                         </form>
                     </div>

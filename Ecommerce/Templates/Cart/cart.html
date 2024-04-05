@@ -10,7 +10,7 @@
         color: white;
     }
 
-    button {
+    .button {
         display: inline-block;
         font-weight: 400;
         line-height: 1.5;
@@ -34,12 +34,14 @@
         border-radius: .25rem;
     }
 
-    button:hover {
-        background-color: rgb(84, 84, 84);
+    .button:hover {
+        background-color: rgb(219, 218, 218);
+        color: black;
     }
 
-    button:active {
-        background-color: #302f2e;
+    .button:active {
+        background-color: #cfcfcf;
+        color: black;
     }
 
     .btns button {
@@ -144,10 +146,16 @@
     </div>
     </hr>
     </hr>
+    {% if cart.total_price > 0 %}
     <form id="buyNowFormcart" action="{% url 'buy_now_from_cart' %}" method="post">
         {% csrf_token %}
         <button type="submit">Buy Now</button>
     </form>
+    {% else %}
+    <h5>Your cart is empty </h5>
+    <a href="{% url 'product' %}" class="button">Browse Products &#10142;</a>
+    {% endif %}
+
 
 </div>
 {% include 'helper/footer.html' %}

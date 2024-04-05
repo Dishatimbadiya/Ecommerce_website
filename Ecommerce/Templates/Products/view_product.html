@@ -61,7 +61,7 @@
     }
 
 
-    button {
+    .button {
         display: inline-block;
         font-weight: 400;
         line-height: 1.5;
@@ -85,12 +85,14 @@
         border-radius: .25rem;
     }
 
-    button:hover {
-        background-color: rgb(84, 84, 84);
+    .button:hover {
+        background-color: #d2d0cf;
+        color: black;
     }
 
-    button:active {
-        background-color: #302f2e;
+    .button:active {
+        background-color: #d2d0cf;
+        color: black;
     }
 
     .btns button {
@@ -171,16 +173,20 @@
                     </div>
 
                     <div class="button-container">
+                        {% if user.is_authenticated %}
                         <form action="{% url 'add_to_cart' %}" method="post" style="display: inline;">
                             {% csrf_token %}
                             <input type="hidden" name="product_id" value="{{ product.id }}">
-                            <button type="submit">Add to Cart</button>
+                            <button type="submit" class="button">Add to Cart</button>
                         </form>
                         <form id="buyNowFormcart" action="{% url 'buy_now_from_cart' %}" method="post"
                             style="display: inline;">
                             {% csrf_token %}
-                            <button type="submit">Buy Now</button>
+                            <button type="submit" class="button">Buy Now</button>
                         </form>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="button">Buy Now</a>
+                        {% endif %}
                     </div>
 
                 </div>
