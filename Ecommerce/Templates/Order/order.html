@@ -64,11 +64,14 @@
             <h4 class="card-title">Order ID: {{ order.id }}</h4>
             <p class="card-text">Order Date: {{ order.order_date }}</p>
             <p class="card-text">Shipment Date: {{ order.shipment_date }}</p>
+            <p class="card-text">Order Price : {{ order.price }}</p>
+            </br>
             <h5 class="card-title">Order Items:</h5>
             <ul>
                 {% for ordered_item in ordered_items %}
                 {% if ordered_item.order == order %}
-                <li>
+                <div>
+                    </br>
                     <img src="../../{{ ordered_item.product.image }}" class="card-img" alt="Product">
                     </br>
                     <div class="container">
@@ -76,7 +79,7 @@
                         <p>Quantity: {{ ordered_item.quantity }}</p>
                         <p>Price: {{ ordered_item.product.price }}</p>
                     </div>
-                </li>
+                </div>
                 {% endif %}
                 {% endfor %}
             </ul>
